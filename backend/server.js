@@ -11,10 +11,10 @@ const normalizePort = val => {
     } return false;
 };
 
-const port = normalizePort(process.envPORT || '3000');
+const port = normalizePort('3000');
 app.set('port', port);
 
 const server = http.createServer(app);
 
 
-server.listen(port);
+server.listen(3000);
