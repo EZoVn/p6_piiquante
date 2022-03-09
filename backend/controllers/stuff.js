@@ -84,7 +84,13 @@ exports.modifySauce = (req, res, next) => {
         .catch(error => res.status());
 };
 
-/**NON FINI EN TEST */
+/**LIKE OR DISLIKE
+ * recherche la sauce avec findOne()
+ * switch du like
+ * like = 1 update sauce avec $incremente like a 1 et $push de l'userId dans usersLiked
+ * like = 0 update sauce avec $incremente like a 0 et $pull pour retirer userId de usersLiked et usersDisliked
+ * like = -1 update sauce avec $incremente like a -1 et $push de l'user dans usersDisliked
+ */
 exports.likeSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
@@ -92,47 +98,22 @@ exports.likeSauce = (req, res, next) => {
                 case 1:
                     console.log('1');
                     Sauce.updateOne({ _id: req.params.id }, { $inc: { like: 1 }, $push: { usersLiked: req.body.userId } })
-                        .then(() => res.status(201).json({ message: 'Sauce like !' }))
+                        .then(() => res.status(201).json({ message: 'Sauce like avec succès!' }))
                         .catch(error => res.status());
                     break;
                 case 0:
                     console.log('0');
-                    Sauce.updateOne({ _id: req.params.id }, { $inc: { like: 0 }, $push: { usersLiked: req.body.userId } })
-                    .then(() => res.status(201).json({ message: 'Aucun like !' }))
-                    .catch(error => res.status());
+                    Sauce.updateOne({ _id: req.params.id }, { $inc: { like: 0 }, $pull: { usersLiked: req.body.userId, usersDisliked: req.body.userId } })
+                        .then(() => res.status(201).json({ message: 'Aucun like !' }))
+                        .catch(error => res.status());
                     break;
                 case -1:
                     console.log('-1');
                     Sauce.updateOne({ _id: req.params.id }, { $inc: { like: -1 }, $push: { usersDisliked: req.body.userId } })
-                    .then(() => res.status(201).json({ message: 'Aucun like !' }))
-                    .catch(error => res.status());
+                        .then(() => res.status(201).json({ message: 'Sauce dislike avec succès !' }))
+                        .catch(error => res.status());
                     break;
             }
-            // if (!sauce.usersLiked.includes(req.body.userId) && req.body.like === 1) {
-            //     console.log('like = 1');
-            //     console.log(req.body.userId);
-
-            // Sauce.updateOne({ _id: req.params.id }, { $inc: { like: 1 }, $push: { usersDisliked: req.body.userId } })
-            //     .then(() => res.status(200).json({ message: 'Sauce modifié !' }))
-            //     .catch(error => res.status());
-            // }
-            // if (!sauce.usersLiked.includes(req.body.userId) && req.body.like === 0) {
-            //     console.log('like = 0');
-            //     console.log(req.body.userId);
-
-            //     Sauce.updateOne({ _id: req.params.id }, { $inc: { like: 0 }, $push: { usersDisliked: req.body.userId } })
-            //         .then(() => res.status(200).json({ message: 'Sauce modifié !' }))
-            //         .catch(error => res.status());
-            // } if (!sauce.usersDisliked.includes(req.body.userId) && req.body.like === -1) {
-            //     console.log('-1');
-            //     console.log(req.body.userId);
-            //     Sauce.updateOne({ _id: req.params.id }, { $inc: { like: -1 }, $push: { usersDisliked: req.body.userId } })
-            //         .then(() => res.status(200).json({ message: 'Sauce modifié !' }))
-            //         .catch(error => res.status());
-            // }
         })
         .catch(error => res.status(404).json({ error }));
 };
-
-
-
