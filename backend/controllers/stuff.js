@@ -43,7 +43,7 @@ exports.getOneSauce = (req, res, next) => {
 /**SUPPRIMER UNE SAUCE
  * findOne() pour retrouver la sauce séléctionner
  * s'il n'y a pas de sauce return err404
- * si je ne suis pas authorisé return err401
+ * si je ne suis pas authorisé return err403 authentifié mais non authorisé
  * fs.unlink pour supprimer la photo du du system
  * supprime la sauce de grâce son ID api/sauce/:id
  */
@@ -53,7 +53,7 @@ exports.deleteSauce = (req, res, next) => {
             if (!sauce) {
                 return res.status(404).json({ error: new Error('Sauce non trouvé !') });
             } if (sauce.userId !== req.auth.userId) {
-                return res.status(401).json({ error: new Error('Requête non autorisée !') });
+                return res.status(403).json({ error: new Error('Requête non autorisée !') });
             }
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`./images/${filename}`, () => {

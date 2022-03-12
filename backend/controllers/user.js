@@ -3,6 +3,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+/**SIGN-UP
+ * hash avec bcrypt du mail et password rentrer dans le formulaire
+ * sauvegarde dans la base de données
+ */
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
@@ -17,11 +21,19 @@ exports.signup = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
+/**LOG-IN
+ * recherche si le mail entré dans le formulaire existe
+ * s'il n'existe pas retourne err404 ressource inexistante
+ * 
+ * bcrypt compare permet de savoir le mail et le mot de passe sont correct
+ * s'il ne sont pas valide return err401 mot de passe incorrect
+ * sinon génere un token grace a jsonwebtoken de l'userId 
+ */
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user) {
-                return res.status(401).json({ error: 'Utilisateur inexistant !' });
+                return res.status(404).json({ error: 'Utilisateur inexistant !' });
             }
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
