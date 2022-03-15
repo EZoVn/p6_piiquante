@@ -66,6 +66,9 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 /**MODIFIER UNE SAUCE
+ * S'il y a un nouveau  fichier, recherche la sauce
+ * enregistre le nom de la sauce dans une const afin de la supprimer avec fs.unlink
+ * 
  * sauceObject regarde s'il existe une image ou non 
  * si oui on traite la nouvelle image
  * sinon on traite l'objet entrant
@@ -73,6 +76,18 @@ exports.deleteSauce = (req, res, next) => {
  * avec les nouvelles modification
  */
 exports.modifySauce = (req, res, next) => {
+    if (req.file) {
+        Sauce.findOne({ _id: req.params.id })
+            .then((sauce) => {
+                const ancienneImage = sauce.imageUrl.split(/images/)[1];
+                fs.unlink(`./images/${ancienneImage}`, (err => {
+                    if (err) console.log(err);
+                    else {
+                        console.log("Ancienne image effacé " + ancienneImage);
+                    }
+                }));
+            })
+    }
     const sauceObject = req.file ?
         {
             ...JSON.parse(req.body.sauce),
