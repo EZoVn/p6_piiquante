@@ -10,3 +10,9 @@ Pour le lancer : npm start
 
 DB_KEY=''
 TOKEN=''
+
+Pour creer un compte le mot de passe doit contenir :
+-Entre 8 et 35 caractères 
+-Une majuscule, une minuscule
+-Un chiffre
+-Un caractère special
