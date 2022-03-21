@@ -27,7 +27,7 @@ passwordSchema
 */
 exports.passwordSchema = (req, res, next) => {
     if (!passwordSchema.validate(req.body.password)) {
-        return res.status(400).json({ error: 'Le mot de passe ne respect pas les criteres' })
+        return res.status(400).json({ message: 'Le mot de passe ne respect pas les criteres \nEntre 8 et 35 caractères \n Une majuscule minimum \n Une minuscule minimum \n Un caractère spécial' })
     }
     next();
 };

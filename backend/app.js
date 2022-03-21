@@ -7,7 +7,7 @@ const path = require('path');
 require('dotenv').config();
 
 
-const stuffRoutes = require('./routes/stuff');
+const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
 mongoose.connect(process.env.DB_KEY,
@@ -16,7 +16,7 @@ mongoose.connect(process.env.DB_KEY,
         useUnifiedTopology: true
     })
     .then(() => console.log('Connexion à MongoDB réussi !'))
-    .catch(() => console.log('La connexion a MongoDB à échouée !'));
+    .catch((error) => console.log('La connexion a MongoDB à échouée !\n' + error));
 
 app.use(express.json());
 
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 /**Route API */
-app.use('/api/sauces', stuffRoutes);
+app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
